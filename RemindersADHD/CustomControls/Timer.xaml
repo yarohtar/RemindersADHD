@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="RemindersADHD.CustomControls.Timer"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:c="clr-namespace:RemindersADHD.CustomControls"
+             x:Name="self">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="{Binding FontSize, Source={x:Reference self}}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <ContentView.GestureRecognizers>
+        <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+    </ContentView.GestureRecognizers>
+    <HorizontalStackLayout>
+        <Label Text="{Binding Minutes, Source={x:Reference self}}" />
+        <Label Text=":" />
+        <Label Text="{Binding Seconds, Source={x:Reference self}}" />
+    </HorizontalStackLayout>
+</ContentView>

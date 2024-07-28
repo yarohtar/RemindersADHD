@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="RemindersADHD.CustomControls.TestControlsView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:RemindersADHD.CustomControls"
+             x:Name="self"
+             Title="TestControls"
+             BackgroundColor="Gray">
+    <Grid ColumnDefinitions="*,Auto,*">
+        <VerticalStackLayout Grid.Column="1">
+
+            <custom:Timer x:Name="TimerControl"
+                FontSize="100"
+                          HorizontalOptions="Center"
+                          IsRunning="{Binding IsRunning, Source={x:Reference self}}"
+                          Milliseconds="5000"
+                          Mode="Basic"/>
+            <Button x:Name="StartStopButton"
+                BackgroundColor="DimGray"
+                    Command="{Binding Click, Source={x:Reference self}}"
+                    FontSize="30"
+                    Text="Click Me!" />
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

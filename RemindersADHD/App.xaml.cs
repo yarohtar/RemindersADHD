@@ -1,4 +1,6 @@
-﻿namespace RemindersADHD
+﻿using RemindersADHD.MVVM.Views;
+
+namespace RemindersADHD
 {
     public partial class App : Application
     {

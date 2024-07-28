@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using CommunityToolkit.Maui;
+using System.Runtime.Serialization.Formatters;
 
 namespace RemindersADHD
 {
@@ -9,16 +12,17 @@ namespace RemindersADHD
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("arrow_icons.ttf", "ArrowIcons");
                 });
 
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
             return builder.Build();
         }
     }

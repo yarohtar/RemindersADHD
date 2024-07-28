@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary x:Class="RemindersADHD.Resources.Styles.Fonts"
+                    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <x:Int16 x:Key="HeaderFontSize4">23</x:Int16>
+    <x:Int16 x:Key="HeaderFontSize3">27</x:Int16>
+    <x:Int16 x:Key="HeaderFontSize2">38</x:Int16>
+    <x:Int16 x:Key="HeaderFontSize1">54</x:Int16>
+    <x:Int16 x:Key="HeaderFontSize0">68</x:Int16>
+    <x:Int16 x:Key="ItemNameFontSize0">24</x:Int16>
+    <x:Int16 x:Key="ItemNameFontSize1">20</x:Int16>
+    <x:Int16 x:Key="CaptionFontSize3">10</x:Int16>
+    <x:Int16 x:Key="CaptionFontSize2">12</x:Int16>
+    <x:Int16 x:Key="CaptionFontSize1">14</x:Int16>
+    <x:Int16 x:Key="CaptionFontSize0">18</x:Int16>
+    <x:Int16 x:Key="ButtonFontSize">20</x:Int16>
+    <x:Int16 x:Key="SmallButtonFontSize">16</x:Int16>
+
+</ResourceDictionary>

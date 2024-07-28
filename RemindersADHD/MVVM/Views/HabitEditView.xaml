@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RemindersADHD.MVVM.Views.HabitEditView"
+             Title="Edit habit">
+    <Grid RowDefinitions="*, Auto">
+        <VerticalStackLayout>
+            <Entry Placeholder="Name" Text="{Binding Name}"/>
+            <Entry Placeholder="times per" Text="{Binding TimesPer}" Keyboard="Numeric"/>
+            <Entry Placeholder="days" Text="{Binding Period}" Keyboard="Numeric"/>
+        </VerticalStackLayout>
+        <Button Grid.Row="1" Text="Save" Command="{Binding SaveCommand}"/>
+    </Grid>
+</ContentPage>

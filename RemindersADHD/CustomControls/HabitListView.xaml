@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="RemindersADHD.CustomControls.HabitListView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:RemindersADHD.CustomControls"
+             xmlns:models="clr-namespace:RemindersADHD.MVVM.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Name="self"
+             x:DataType="custom:HabitListView">
+    <VerticalStackLayout BindableLayout.ItemsSource="{Binding HabitList, Source={x:Reference self}}">
+        <BindableLayout.ItemTemplate>
+            <DataTemplate x:DataType="models:HabitOnDay">
+                <custom:ItemView CheckedCommand="{Binding CheckedCommand, Source={x:Reference self}}"
+                                 CheckedCommandParameter="{Binding .}"
+                                 IsChecked="{Binding Done}"
+                                 ItemName="{Binding Name}"
+                                 TappedCommand="{Binding TappedCommand, Source={x:Reference self}}"
+                                 TappedCommandParameter="{Binding .}" />
+            </DataTemplate>
+        </BindableLayout.ItemTemplate>
+    </VerticalStackLayout>
+</ContentView>

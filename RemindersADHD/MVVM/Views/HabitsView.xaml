@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="RemindersADHD.MVVM.Views.HabitsView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cells="clr-namespace:RemindersADHD.MVVM.Cells"
+             xmlns:custom="clr-namespace:RemindersADHD.CustomControls"
+             xmlns:models="clr-namespace:RemindersADHD.MVVM.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:RemindersADHD.MVVM.ViewModels"
+             x:Name="self"
+             Title="Habits"
+             x:DataType="vm:HabitsViewModel"
+             Style="{StaticResource ContentPage}">
+
+    <Grid BackgroundColor="Transparent"
+          RowDefinitions="Auto,*,Auto">
+        <Grid ColumnDefinitions="Auto,*,Auto">
+            <BoxView Grid.ColumnSpan="3"
+                     Color="{AppThemeBinding Dark={StaticResource DarkCardBackgroundColor},
+                                             Light={StaticResource LightCardBackgroundColor}}" />
+            <Button x:Name="ButtonPrev"
+                    Grid.Column="0"
+                    Padding="10"
+                    BackgroundColor="Black"
+                    Command="{Binding PrevDateCommand}"
+                    Style="{StaticResource Arrow_More_Button}"
+                    Text="&#xE809;"
+                    VerticalOptions="Center"
+                    WidthRequest="{Binding Height, Source={x:Reference ButtonPrev}}" />
+            <Label Grid.Column="1"
+                   HorizontalOptions="Center"
+                   Style="{StaticResource Headline4}"
+                   Text="{Binding DateText}"
+                   VerticalOptions="Center" />
+            <DatePicker Grid.Column="1"
+                        Date="{Binding CurrentDate}"
+                        HorizontalOptions="CenterAndExpand"
+                        MaximumDate="{Binding MaxDate}"
+                        Opacity="0"
+                        Style="{StaticResource Base_DatePicker}"
+                        VerticalOptions="CenterAndExpand" />
+            <Button x:Name="ButtonNext"
+                    Grid.Column="2"
+                    Padding="10"
+                    Command="{Binding NextDateCommand}"
+                    Style="{StaticResource Arrow_More_Button}"
+                    Text="&#xE80a;"
+                    VerticalOptions="Center"
+                    WidthRequest="{Binding Height, Source={x:Reference ButtonNext}}" />
+        </Grid>
+        <VerticalStackLayout Grid.Row="1">
+            <VerticalStackLayout.GestureRecognizers>
+                <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+            </VerticalStackLayout.GestureRecognizers>
+            <!--<Label Style="{StaticResource Headline4}"
+                       Text="You should do today:" />-->
+            <Grid>
+                <custom:HabitListView x:Name="FakeList"
+                                      HabitList="{Binding HelperHabits}" />
+                <custom:HabitListView x:Name="OriginalList"
+                                      CheckedCommand="{Binding CheckChangedCommand}"
+                                      HabitList="{Binding HabitsOnCurrentDate}"
+                                      TappedCommand="{Binding EditItemCommand}" />
+            </Grid>
+            <!--<Label Style="{StaticResource Headline4}"
+                       Text="Other habits:" />
+                <VerticalStackLayout x:Name="OtherHabits"
+                                     BindableLayout.ItemsSource="{Binding OtherHabits}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:Habit">
+                            <custom:ItemView CheckedCommand="{Binding BindingContext.CheckChangedCommand, Source={x:Reference self}}"
+                                             CheckedCommandParameter="{Binding .}"
+                                             IsChecked="{Binding DoneOnCurrentDate}"
+                                             ItemName="{Binding Name}"
+                                             TappedCommand="{Binding BindingContext.EditItemCommand, Source={x:Reference self}}"
+                                             TappedCommandParameter="{Binding .}" />
+
+                            <cells:HabitCard ParentViewModel="{Binding Source={x:Reference OtherHabits}, Path=BindingContext}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>-->
+        </VerticalStackLayout>
+        <Button Grid.Row="2"
+                Command="{Binding AddNewItemCommand}"
+                Style="{StaticResource Base_Button}"
+                Text="Add new habit" />
+    </Grid>
+</ContentPage>

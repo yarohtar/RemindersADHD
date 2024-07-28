@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="RemindersADHD.CustomControls.ItemView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:RemindersADHD.CustomControls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Name="self"
+             x:DataType="custom:ItemView">
+
+    <Frame Style="{StaticResource Base_FrameEntry}">
+        <Frame.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding TappedCommand, Source={x:Reference self}}"
+                                  CommandParameter="{Binding TappedCommandParameter, Source={x:Reference self}}" />
+        </Frame.GestureRecognizers>
+        <Grid ColumnDefinitions="Auto, *, Auto">
+            <CheckBox x:Name="Checkbox"
+                IsChecked="{Binding Source={x:Reference self}, Path=IsChecked}"
+                      IsEnabled="{Binding HasCheckbox, Source={x:Reference self}}"
+                      IsVisible="{Binding HasCheckbox, Source={x:Reference self}}"
+                      WidthRequest="60"
+                      Style="{StaticResource Base_CheckBox}">
+                <CheckBox.Behaviors>
+                    <toolkit:EventToCommandBehavior Command="{Binding CheckedCommand, Source={x:Reference self}}"
+                                                    CommandParameter="{Binding CheckedCommandParameter, Source={x:Reference self}}"
+                                                    EventName="CheckedChanged" />
+                </CheckBox.Behaviors>
+            </CheckBox>
+            <Label Grid.Column="1"
+                   Padding="10"
+                   HorizontalOptions="Start"
+                   Style="{StaticResource ItemName1}"
+                   Text="{Binding ItemName, Source={x:Reference self}}"
+                   VerticalOptions="Center" />
+        </Grid>
+    </Frame>
+</ContentView>

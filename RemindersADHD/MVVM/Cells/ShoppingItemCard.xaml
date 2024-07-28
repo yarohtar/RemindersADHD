@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="RemindersADHD.MVVM.Cells.ShoppingItemCard"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:RemindersADHD.MVVM.Models"
+             x:Name="self"
+             x:DataType="models:ShoppingItem">
+    <Frame Style="{StaticResource Base_FrameEntry}">
+        <Frame.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding Source={x:Reference self}, Path=ParentViewModel.NavigateToEditItemCommand}"
+                                  CommandParameter="{Binding .}" />
+        </Frame.GestureRecognizers>
+        <VerticalStackLayout>
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout VerticalOptions="Center">
+                    <Label Text="{Binding Name}"
+                           Style="{StaticResource ItemName1}"
+                           Padding="8,8,0,0"/>
+                    <Label FontSize="10"
+                           Text="{Binding LastBoughtDate}"
+                           Style="{StaticResource Note1}"
+                           TextColor="{Binding LastBoughtColour}" 
+                           Padding="8,0,0,8"/>
+                </VerticalStackLayout>
+                <Button x:Name="MoreButton"
+                    Grid.Column="1"
+                        Style="{StaticResource Arrow_More_Button}"
+                        BackgroundColor="White"
+                        Command="{Binding Source={x:Reference self}, Path=ParentViewModel.SwitchItemNote}"
+                        CommandParameter="{Binding .}"
+                        TextColor="Gray" />
+            </Grid>
+            <Entry IsEnabled="{Binding HasNote}"
+                   IsVisible="{Binding HasNote}"
+                   Style="{StaticResource Base_Entry}"
+                   Placeholder="Note"
+                   Text="{Binding Note}" />
+            <HorizontalStackLayout IsVisible="False">
+                <Label Text="Buy every "
+                       VerticalOptions="Center" />
+                <Entry Keyboard="Numeric"
+                       Text="{Binding BuyAgainDaysString}"
+                       VerticalOptions="Center" />
+                <Label Text="days"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Frame>
+</ContentView>

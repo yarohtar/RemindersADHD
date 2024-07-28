@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="RemindersADHD.MVVM.Views.ShoppingListView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cells="clr-namespace:RemindersADHD.MVVM.Cells"
+             xmlns:vms="clr-namespace:RemindersADHD.MVVM.ViewModels"
+             Title="Shopping list"
+             x:DataType="{x:Type vms:ShoppingListViewModel}"
+             Style="{StaticResource ContentPage}">
+    <Grid RowDefinitions="*,Auto">
+        <ScrollView>
+            <VerticalStackLayout>
+                <VerticalStackLayout x:Name="ShoppingList"
+                                     BindableLayout.ItemsSource="{Binding ShoppingItems}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView Threshold="150">
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItemView BackgroundColor="Green"
+                                                       Command="{Binding Source={x:Reference ShoppingList}, Path=BindingContext.BuyItemCommand}"
+                                                       CommandParameter="{Binding .}">
+                                            <Label Padding="15"
+                                                   HorizontalOptions="Start"
+                                                   Text="Bought"
+                                                   VerticalOptions="Center" />
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItemView BackgroundColor="Purple"
+                                                       Command="{Binding Source={x:Reference ShoppingList}, Path=BindingContext.RemoveShoppingItemCommand}"
+                                                       CommandParameter="{Binding .}">
+                                            <Label Padding="15"
+                                                   HorizontalOptions="End"
+                                                   Text="Remove"
+                                                   VerticalOptions="Center" />
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <cells:ShoppingItemCard ParentViewModel="{Binding Source={x:Reference ShoppingList}, Path=BindingContext}" />
+                            </SwipeView>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+                <Label Padding="10"
+                       FontAttributes="Bold"
+                       Style="{StaticResource Headline4}"
+                       Text="Previously added:" />
+
+                <VerticalStackLayout x:Name="OldItemList"
+                                     BindableLayout.ItemsSource="{Binding OldItems}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView Threshold="150">
+                                <SwipeView.LeftItems>
+                                    <SwipeItems Mode="Execute">
+                                        <SwipeItemView BackgroundColor="LightGreen"
+                                                       Command="{Binding Source={x:Reference OldItemList}, Path=BindingContext.AddOldItemCommand}"
+                                                       CommandParameter="{Binding .}">
+                                            <Label Padding="15"
+                                                   HorizontalOptions="Start"
+                                                   Text="Add to list"
+                                                   VerticalOptions="Center" />
+                                        </SwipeItemView>
+                                    </SwipeItems>
+                                </SwipeView.LeftItems>
+                                <SwipeView.RightItems>
+                                    <SwipeItem BackgroundColor="Red"
+                                               Command="{Binding Source={x:Reference OldItemList}, Path=BindingContext.DeleteOldItemCommand}"
+                                               CommandParameter="{Binding .}"
+                                               Text="Delete" />
+                                </SwipeView.RightItems>
+                                <cells:ShoppingItemCard ParentViewModel="{Binding Source={x:Reference ShoppingList}, Path=BindingContext}" />
+                            </SwipeView>
+
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,Auto">
+            <Entry ClearButtonVisibility="WhileEditing"
+                   FontSize="20"
+                   Placeholder="Enter new item"
+                   ReturnCommand="{Binding AddNewItemCommand}"
+                   Style="{StaticResource Base_Entry}"
+                   Text="{Binding NewItemName}" />
+            <Button Grid.Column="1"
+                    Command="{Binding AddNewItemCommand}"
+                    FontSize="{StaticResource ButtonFontSize}"
+                    Style="{StaticResource Small_Button}"
+                    Text="Add" />
+        </Grid>
+    </Grid>
+</ContentPage>

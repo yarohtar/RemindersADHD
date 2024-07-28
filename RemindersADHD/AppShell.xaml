@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="RemindersADHD.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:RemindersADHD"
-    Shell.FlyoutBehavior="Disabled"
-    Title="RemindersADHD">
+<Shell x:Class="RemindersADHD.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:RemindersADHD"
+       xmlns:views="clr-namespace:RemindersADHD.MVVM.Views"
+       Title="RemindersADHD"
+       Style="{StaticResource Shell}"
+       Shell.FlyoutBehavior="Flyout">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <ShellContent Title="Test view"
+                  x:Name="TestFlyoutItem"
+                  Route="testingshit"/>
+    <ShellContent Title="Habits"
+                  x:Name="HabitsFlyoutItem"
+                  Route="habits" />
+    <ShellContent Title="Shopping List"
+                  x:Name="ShoppingListFlyoutItem"
+                  Route="shoppinglist" />
 </Shell>

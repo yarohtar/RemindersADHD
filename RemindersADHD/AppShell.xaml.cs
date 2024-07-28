@@ -1,10 +1,18 @@
-﻿namespace RemindersADHD
+﻿using RemindersADHD.CustomControls;
+using RemindersADHD.MVVM.Views;
+
+namespace RemindersADHD
 {
     public partial class AppShell : Shell
     {
         public AppShell()
         {
             InitializeComponent();
+            TestFlyoutItem.ContentTemplate = new DataTemplate(() => new TestControlsView());
+            HabitsFlyoutItem.ContentTemplate = new DataTemplate(() => new HabitsView());
+            ShoppingListFlyoutItem.ContentTemplate = new DataTemplate(()=>new ShoppingListView());
+            Routing.RegisterRoute("shoppingitemedit", typeof(ShoppingItemEditView));
+            Routing.RegisterRoute("habitedit", typeof(HabitEditView));
         }
     }
 }

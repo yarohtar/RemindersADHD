@@ -8,6 +8,9 @@
        Style="{StaticResource Shell}"
        Shell.FlyoutBehavior="Flyout">
 
+    <ShellContent Title="Pomodoro"
+                  x:Name="PomodoroFlyoutItem"
+                  Route="pomodoro"/>
     <ShellContent Title="Test view"
                   x:Name="TestFlyoutItem"
                   Route="testingshit"/>

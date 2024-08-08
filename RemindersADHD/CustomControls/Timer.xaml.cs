@@ -35,12 +35,14 @@ public partial class Timer : ContentView
 	public Timer()
 	{
 		InitializeComponent();
-        TimeHit += EventStopper;
 	}
     
     private DateTime _startTime = DateTime.Now;
     private long _ticksStarted = 0;
     private bool _internalMillisecondsChange = false;
+    /// <summary>
+    /// stops the event from being raised multiple times
+    /// </summary>
     private bool _eventRaised = false;
     private Task _refresher = Task.CompletedTask;
 
@@ -56,15 +58,12 @@ public partial class Timer : ContentView
     private bool IsBackwards => Mode == TimerMode.BasicBackward || Mode == TimerMode.BackwardTo || Mode == TimerMode.BackwardUntil;
     private bool HasEvent => !(Mode == TimerMode.Basic || Mode == TimerMode.BasicBackward);
 
+    public bool HasMinus => MillisecondsOnClock + AdjustForRounding < 0;
     private long AdjustForRounding => IsForwards ? 0 : 999;
-    public string Minutes => (((MillisecondsOnClock + AdjustForRounding) / 1000) / 60).ToString("00");
-    public string Seconds => (((MillisecondsOnClock + AdjustForRounding) / 1000) % 60).ToString("00");
+    public string Minutes => Math.Abs((int)Math.Floor((MillisecondsOnClock + AdjustForRounding) / 1000.0) / 60).ToString("00");
+    public string Seconds => Math.Abs((int)Math.Floor((MillisecondsOnClock + AdjustForRounding) / 1000.0) % 60).ToString("00");
 
     public event TimeHitEventHandler? TimeHit;
-    private void EventStopper(object sender, EventArgs e)
-    {
-        _eventRaised = true;
-    }
 
     public void StartPause()
     {
@@ -75,6 +74,7 @@ public partial class Timer : ContentView
     private async Task Start()
     {
         _startTime = DateTime.Now;
+        await _refresher;
         _refresher = Refresher();
         await _refresher;
     }
@@ -94,7 +94,7 @@ public partial class Timer : ContentView
     {
         while (IsRunning)
         {
-            await Task.Delay(10);
+            await Task.Delay(12);
             Refresh();
         }
     }
@@ -104,16 +104,27 @@ public partial class Timer : ContentView
         _internalMillisecondsChange = true;
         Milliseconds = MillisecondsOnClock;
         _internalMillisecondsChange = false;
+        RefreshUI();
+    }
+    private void RefreshUI()
+    {
         OnPropertyChanged(nameof(Minutes));
         OnPropertyChanged(nameof(Seconds));
+        OnPropertyChanged(nameof(HasMinus));
     }
     private void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
-        StartPause();
+        //StartPause();
     }
 
+    private void CallTimeHit()
+    {
+        TimeHit?.Invoke(this, new TimeHitEventArgs { Mode = this.Mode, MillisecondsOnClock = this.MillisecondsOnClock });
+        _eventRaised = true;
+        TimeHitCommand.Execute(TimeHitCommandParameter);
+    }
     /// <remarks>
-    /// Will not Refresh!!
+    /// This function will not Refresh!!
     /// </remarks>
     private void CheckTimerHit()
     {
@@ -127,7 +138,7 @@ public partial class Timer : ContentView
             case TimerMode.ForwardTo:
                 if(MillisecondsOnClock >= MillisecondsToHit)
                 {
-                    TimeHit?.Invoke(this, new TimeHitEventArgs { Mode=this.Mode, MillisecondsOnClock=this.MillisecondsOnClock });
+                    CallTimeHit();
                 }
                 break;
             case TimerMode.ForwardUntil:
@@ -138,13 +149,13 @@ public partial class Timer : ContentView
                     _ticksStarted = MillisecondsToHit;
                     _startTime = DateTime.Now;
 
-                    TimeHit?.Invoke(this, new TimeHitEventArgs { Mode = this.Mode, MillisecondsOnClock = this.MillisecondsOnClock });
+                    CallTimeHit();
                 }
                 break;
             case TimerMode.BackwardTo:
                 if (MillisecondsOnClock <= MillisecondsToHit)
                 {
-                    TimeHit?.Invoke(this, new TimeHitEventArgs { Mode = this.Mode, MillisecondsOnClock = this.MillisecondsOnClock });
+                    CallTimeHit();
                 }
                 break;
             case TimerMode.BackwardUntil:
@@ -155,7 +166,7 @@ public partial class Timer : ContentView
                     _ticksStarted = MillisecondsToHit;
                     _startTime = DateTime.Now;
 
-                    TimeHit?.Invoke(this, new TimeHitEventArgs { Mode = this.Mode, MillisecondsOnClock = this.MillisecondsOnClock });
+                    CallTimeHit();
                 }
                 break;
 
@@ -164,7 +175,7 @@ public partial class Timer : ContentView
         }
     }
 
-    #region Custom Property Events
+    #region On Property Events
     private static async void OnIsRunningChanged(BindableObject bindable, object oldvalue, object newvalue)
     {
         if (bindable is not Timer timer) return;
@@ -183,7 +194,7 @@ public partial class Timer : ContentView
         if (old == n) return;
         timer._ticksStarted = n * 10000;
         timer._startTime = DateTime.Now;
-        timer.Refresh();
+        timer.RefreshUI();
         timer._eventRaised = false;
     }
     private static void OnModeChanged(BindableObject bindable, object oldvalue, object newvalue)
@@ -221,11 +232,11 @@ public partial class Timer : ContentView
     }
 
     public static readonly BindableProperty FontSizeProperty =
-        BindableProperty.Create(nameof(FontSize), typeof(int), typeof(Timer), 70, 
+        BindableProperty.Create(nameof(FontSize), typeof(short), typeof(Timer), (short)70, 
             BindingMode.OneWay);
-    public int FontSize
+    public short FontSize
     {
-        get=> (int)GetValue(FontSizeProperty);
+        get=> (short)GetValue(FontSizeProperty);
         set => SetValue(FontSizeProperty, value);
     }
 

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="RemindersADHD.MVVM.Views.Pomodoro"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:custom="clr-namespace:RemindersADHD.CustomControls"
+             xmlns:view="clr-namespace:RemindersADHD.MVVM.Views"
+             xmlns:vm="clr-namespace:RemindersADHD.MVVM.ViewModels"
+             Title="Pomodoro"
+             x:DataType="vm:PomodoroViewModel">
+    <Grid RowDefinitions="*,Auto,Auto">
+        <Grid ColumnDefinitions="*,Auto,*"
+              RowDefinitions="*,Auto,*">
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding StartPauseCommand}" />
+            </Grid.GestureRecognizers>
+            <BoxView Grid.RowSpan="3"
+                     Grid.ColumnSpan="3"
+                     BackgroundColor="{Binding BackgroundColour}" />
+            <custom:Timer x:Name="TimerControl"
+                          Grid.Row="1"
+                          Grid.Column="1"
+                          FontSize="{StaticResource HeaderFontSize0}"
+                          HorizontalOptions="Center"
+                          IsRunning="{Binding IsRunning, Mode=TwoWay}"
+                          Milliseconds="{Binding TimeLeft, Mode=TwoWay}"
+                          MillisecondsToHit="0"
+                          Mode="BackwardTo"
+                          TimeHitCommand="{Binding ChangeColourCommand}"
+                          VerticalOptions="Center" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*,*">
+            <Button Margin="10,10,5,4"
+                    Command="{Binding ResetCommand}"
+                    HeightRequest="100"
+                    Text="Restart" />
+            <Button Grid.Column="1"
+                    Margin="5,10,10,4"
+                    Command="{Binding NextSessionCommand}"
+                    HeightRequest="100"
+                    Text="Skip" />
+        </Grid>
+
+        <ScrollView Grid.Row="2"
+                    Orientation="Horizontal">
+            <HorizontalStackLayout x:Name="SessionCards"
+                                   BindableLayout.ItemsSource="{Binding Sessions}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:Name="templ"
+                                  x:DataType="vm:Session">
+                        <Frame Margin="3,6"
+                               Padding="20,5"
+                               BackgroundColor="Green">
+                            <Grid ColumnDefinitions="*,Auto,*">
+                                <Label Text="{Binding Display}" />
+                            </Grid>
+                            <Frame.Triggers>
+                                <DataTrigger Binding="{Binding State}"
+                                             TargetType="Frame"
+                                             Value="Finished">
+                                    <Setter Property="BackgroundColor" Value="Green" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}"
+                                             TargetType="Frame"
+                                             Value="Current">
+                                    <Setter Property="BackgroundColor" Value="SkyBlue" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding State}"
+                                             TargetType="Frame"
+                                             Value="Future">
+                                    <Setter Property="BackgroundColor" Value="Black" />
+                                </DataTrigger>
+
+                            </Frame.Triggers>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

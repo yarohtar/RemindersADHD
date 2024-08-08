@@ -13,7 +13,6 @@ namespace RemindersADHD.MVVM.ViewModels
 {
     public class HabitEditViewModel : INotifyPropertyChanged, IQueryAttributable
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         private Habit habit;
 
@@ -81,6 +80,7 @@ namespace RemindersADHD.MVVM.ViewModels
             return;
         }
 
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

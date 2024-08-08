@@ -11,10 +11,11 @@
             </Style>
         </ResourceDictionary>
     </ContentView.Resources>
-    <ContentView.GestureRecognizers>
+    <!--<ContentView.GestureRecognizers>
         <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
-    </ContentView.GestureRecognizers>
+    </ContentView.GestureRecognizers>-->
     <HorizontalStackLayout>
+        <Label Text="-" IsVisible="{Binding HasMinus, Source={x:Reference self}}"/>
         <Label Text="{Binding Minutes, Source={x:Reference self}}" />
         <Label Text=":" />
         <Label Text="{Binding Seconds, Source={x:Reference self}}" />

@@ -1,9 +1,9 @@
 # RemindersADHD
 App meant to somewhat manage ADHD.
 
-Current features: Shopping list, Habit tracker 
+Current features: Shopping list, Habit tracker, Pomodoro timer,
 
-Planned features: Pomodoro timer, Timed routines, ToDo list, Notification reminders, Stats tracking, ...
+Planned features:  Timed routines, ToDo list, Notification reminders, Stats tracking, ...
 
 Other potential stuff: time/calendar manager, ...
 

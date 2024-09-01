@@ -20,7 +20,7 @@ namespace RemindersADHD.MVVM.Models
         public bool Overdue { get => TimesDoneInLastPeriod < TimesPer; }
         [Ignore]
         public int TimesDoneInLastPeriod { get => datesCompleted.Count((d) => d.Date.AddDays(Period) > DateTime.Now.Date); }
-        
+
         public void DoneOnDateChanged(bool value, DateTime date)
         {
             if (value) AddDate(date);

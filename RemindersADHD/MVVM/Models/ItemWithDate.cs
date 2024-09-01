@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RemindersADHD.MVVM.Models
 {
@@ -17,8 +12,11 @@ namespace RemindersADHD.MVVM.Models
         /// </summary>
         public DateTime DateTime { get; private set; }
         public ObservableCollection<ICardBindable> SubItems { get; set; } = [];
-        public bool Done { get => Kind.Tracker[DateTime].Contains(Kind);
-            set {
+        public bool Done
+        {
+            get => Kind.Tracker[DateTime].Contains(Kind);
+            set
+            {
                 if (value)
                     Kind.Tracker[DateTime].Add(Kind);
                 else
@@ -32,10 +30,10 @@ namespace RemindersADHD.MVVM.Models
         {
             Kind = itemKind;
             DateTime = dateTime;
-            foreach(ItemKind itemk in Kind.SubItems)
+            foreach (ItemKind itemk in Kind.SubItems)
             {
                 var list = itemk.GetItemsOnDay(DateTime);
-                foreach(var itemd in list)
+                foreach (var itemd in list)
                 {
                     SubItems.Add(itemd);
                 }
@@ -45,14 +43,14 @@ namespace RemindersADHD.MVVM.Models
         public ItemWithDate(ItemKind itemKind)
         {
             Kind = itemKind;
-            foreach(ItemKind itemk in Kind.SubItems)
+            foreach (ItemKind itemk in Kind.SubItems)
             {
                 SubItems.Add(itemk.GetItemNoDate());
             }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name=null)
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

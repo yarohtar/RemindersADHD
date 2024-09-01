@@ -30,33 +30,12 @@ namespace Connect
     }}
 }} 
 ";
-        string connectionBaseClass = $@"
-namespace Connect
-{{
-    public class Connection<T1, T2> 
-        //where T1: IUniqueId, IParent<T2>
-        //where T2: IUniqueId
-    {{
-        public int ParentId {{  get; set; }}
-        public int ChildId {{ get; set; }}
-        public Connection() {{ }}
-        public Connection(T1 t1, T2 t2)
-        {{
-            //if(!t1.HasChild(t2))
-            //{{
-              //  throw new Exception();
-            //}}
-            ParentId = 0;
-            ChildId = 0;
-        }}
-    }}
-}}";
 
         public void Initialize(GeneratorInitializationContext context)
         {
             context.RegisterForPostInitialization((i) => 
             { 
-                i.AddSource("ConnectAttribute.g.cs", attributeSource);
+                //i.AddSource("ConnectAttribute.g.cs", attributeSource);
                 //i.AddSource("Connection.g.cs", connectionBaseClass);
             });
             context.RegisterForSyntaxNotifications(() => new ConnectionSyntaxReceiver());
@@ -120,7 +99,7 @@ using System;
 
 namespace {info.Namespace}
 {{
-    public partial class {info.ClassPath} : RemindersADHD.Services.Connection<{info.LeftType}, {info.RightType}>
+    public partial class {info.ClassPath} : Connect.Connection<{info.LeftType}, {info.RightType}>
     {{
         public {info.ClassPath} () : base () {{ }}
         public {info.ClassPath} ({info.LeftType} left, {info.RightType} right) : base(left, right) {{ }}

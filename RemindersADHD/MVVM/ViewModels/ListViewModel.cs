@@ -1,13 +1,8 @@
 ﻿using RemindersADHD.MVVM.Models;
 using RemindersADHD.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RemindersADHD.MVVM.ViewModels
@@ -20,7 +15,9 @@ namespace RemindersADHD.MVVM.ViewModels
         public ObservableCollection<ICardBindable> CompletedItems { get; private set; } = [];
 
         private string _newItemName = "";
-        public string NewItemName { get => _newItemName;
+        public string NewItemName
+        {
+            get => _newItemName;
             set
             {
                 _newItemName = value.Length > 25 ? value.Substring(0, 25) : value;
@@ -49,7 +46,7 @@ namespace RemindersADHD.MVVM.ViewModels
                 CompletedItems.Add(item);
                 await ItemDataService.AddNoDateDone(item.Kind.Tracker, item.Kind);
             }
-            else if(!item.Done && CompletedItems.Remove(item))
+            else if (!item.Done && CompletedItems.Remove(item))
             {
                 Items.Add(item);
                 await ItemDataService.RemoveNoDateDone(item.Kind.Tracker, item.Kind);
@@ -61,7 +58,7 @@ namespace RemindersADHD.MVVM.ViewModels
             _itemKinds = await ItemDataService.GetItems();
             Items.Clear();
             CompletedItems.Clear();
-            foreach(var item in _itemKinds)
+            foreach (var item in _itemKinds)
             {
                 var i = item.GetItemNoDate();
                 if (!i.Done)
@@ -73,7 +70,7 @@ namespace RemindersADHD.MVVM.ViewModels
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name="")
+        protected void OnPropertyChanged([CallerMemberName] string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

@@ -1,12 +1,7 @@
 ﻿using RemindersADHD.MVVM.Models;
 using RemindersADHD.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RemindersADHD.MVVM.ViewModels
@@ -16,8 +11,10 @@ namespace RemindersADHD.MVVM.ViewModels
 
         private Habit habit;
 
-        public string Name { get=>habit.Name; set=>habit.Name=value; }
-        public string TimesPer { get => habit.TimesPer.ToString(); 
+        public string Name { get => habit.Name; set => habit.Name = value; }
+        public string TimesPer
+        {
+            get => habit.TimesPer.ToString();
             set
             {
                 string filter = new string(value.Where(char.IsDigit).ToArray());
@@ -29,7 +26,9 @@ namespace RemindersADHD.MVVM.ViewModels
             }
         }
 
-        public string Period { get => habit.Period.ToString();
+        public string Period
+        {
+            get => habit.Period.ToString();
             set
             {
                 string filter = new string(value.Where(char.IsDigit).ToArray());
@@ -46,14 +45,14 @@ namespace RemindersADHD.MVVM.ViewModels
 
         public HabitEditViewModel()
         {
-            habit= new Habit();
+            habit = new Habit();
         }
         private bool isbusy = false;
         private async Task Save()
         {
             if (isbusy) return;
             isbusy = true;
-            if(habit.Name=="")
+            if (habit.Name == "")
             {
                 return;
             }
@@ -65,7 +64,7 @@ namespace RemindersADHD.MVVM.ViewModels
         {
             if (isbusy) return;
             isbusy = true;
-            if(habit.Name=="")
+            if (habit.Name == "")
             {
                 await HabitsDataService.RemoveItem(habit.Id);
                 await Shell.Current.GoToAsync("..", true);
@@ -89,7 +88,7 @@ namespace RemindersADHD.MVVM.ViewModels
         {
             if (query is null)
                 throw new Exception();
-            if(!query.TryGetValue("Id", out object? s))
+            if (!query.TryGetValue("Id", out object? s))
                 throw new Exception();
 
             int habitId = int.Parse((s as string)!);

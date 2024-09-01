@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RemindersADHD.MVVM.ViewModels
@@ -13,10 +8,10 @@ namespace RemindersADHD.MVVM.ViewModels
     public class Session : INotifyPropertyChanged
     {
         public enum SessionMode { Study, Break, LongBreak }
-        public static Dictionary<SessionMode, long> Lengths = 
-            new() { 
+        public static Dictionary<SessionMode, long> Lengths =
+            new() {
             { SessionMode.Study, 1500000 },
-            { SessionMode.Break, 300000 }, 
+            { SessionMode.Break, 300000 },
             {SessionMode.LongBreak, 1800000 } };
         public enum SessionState { Finished, Current, Future }
         public SessionMode Mode { get; set; }
@@ -31,7 +26,7 @@ namespace RemindersADHD.MVVM.ViewModels
             }
         }
         public long LengthMilliseconds => Lengths[Mode];
-        public string Display => (LengthMilliseconds / 1000 / 60).ToString() + "'" + ((LengthMilliseconds/1000)%60==0 ? "" : " " + ((LengthMilliseconds / 1000) % 60).ToString()+"''");
+        public string Display => (LengthMilliseconds / 1000 / 60).ToString() + "'" + ((LengthMilliseconds / 1000) % 60 == 0 ? "" : " " + ((LengthMilliseconds / 1000) % 60).ToString() + "''");
 
         public event PropertyChangedEventHandler? PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string name = "")
@@ -64,7 +59,7 @@ namespace RemindersADHD.MVVM.ViewModels
                 if (old == -1)
                     old = 0;
                 int min = Math.Min(old, s);
-                int max= Math.Max(old, s);
+                int max = Math.Max(old, s);
 
                 for (int i = min; i <= max; i++)
                 {
@@ -86,7 +81,8 @@ namespace RemindersADHD.MVVM.ViewModels
             Sessions.Add(new Session { Mode = Session.SessionMode.Break });
             Sessions.Add(new Session { Mode = Session.SessionMode.Study });
             Sessions.Add(new Session { Mode = Session.SessionMode.LongBreak });
-            if(NumberOfSessions > 0) {
+            if (NumberOfSessions > 0)
+            {
                 CurrentSessionIndex = 0;
                 for (int i = 1; i < NumberOfSessions; i++) Sessions[i].State = Session.SessionState.Future;
             }
@@ -97,14 +93,16 @@ namespace RemindersADHD.MVVM.ViewModels
         public ICommand StartPauseCommand => new Command(StartStop);
         public ICommand ChangeColourCommand => new Command(ChangeColour);
         public ICommand NextSessionCommand => new Command(() => CurrentSessionIndex++);
-        public ICommand ResetCommand => new Command(() => { IsRunning = false; TimeLeft = CurrentSession.LengthMilliseconds;
+        public ICommand ResetCommand => new Command(() =>
+        {
+            IsRunning = false; TimeLeft = CurrentSession.LengthMilliseconds;
             OnPropertyChanged(nameof(TimeLeft));
         });
-        private string _backgroundColour="Red";
+        private string _backgroundColour = "Red";
         public string BackgroundColour { get => _backgroundColour; set { _backgroundColour = value; OnPropertyChanged(); } }
         private void StartStop()
         {
-            if(IsRunning) IsRunning = false;
+            if (IsRunning) IsRunning = false;
             else IsRunning = true;
         }
         private void ChangeColour()
@@ -114,7 +112,7 @@ namespace RemindersADHD.MVVM.ViewModels
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string name="")
+        public void OnPropertyChanged([CallerMemberName] string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

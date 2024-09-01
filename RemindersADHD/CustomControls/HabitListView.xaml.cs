@@ -1,4 +1,3 @@
-using MvvmHelpers;
 using RemindersADHD.MVVM.Models;
 using System.Windows.Input;
 
@@ -6,10 +5,10 @@ namespace RemindersADHD.CustomControls;
 
 public partial class HabitListView : ContentView
 {
-	public HabitListView()
-	{
-		InitializeComponent();
-	}
+    public HabitListView()
+    {
+        InitializeComponent();
+    }
 
     #region Bindable Properties
 

@@ -1,20 +1,14 @@
 ﻿using MvvmHelpers;
 using RemindersADHD.MVVM.Models;
 using RemindersADHD.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RemindersADHD.MVVM.ViewModels
 {
     public enum TodayFlag { Today, OtherDay };
-    public enum ChangingToDay { Next, Previous, Future, Same, Other};
+    public enum ChangingToDay { Next, Previous, Future, Same, Other };
     public class HabitsViewModel : INotifyPropertyChanged
     {
 
@@ -59,7 +53,7 @@ namespace RemindersADHD.MVVM.ViewModels
         }
 
         #region Commands
-        public ICommand PrevDateCommand => new Command(async () => 
+        public ICommand PrevDateCommand => new Command(async () =>
         {
             Task? t = DateChanging?.Invoke(ChangingToDay.Previous);
             if (t is not null) await t;
@@ -70,10 +64,10 @@ namespace RemindersADHD.MVVM.ViewModels
         public ICommand NextDateCommand => new Command(async () =>
         {
             Task? t;
-            if(CurrentDate.AddDays(1) > DateTime.Now.Date)
+            if (CurrentDate.AddDays(1) > DateTime.Now.Date)
                 t = DateChanging?.Invoke(ChangingToDay.Future);
             else
-                t= DateChanging?.Invoke(ChangingToDay.Next);
+                t = DateChanging?.Invoke(ChangingToDay.Next);
             if (t is not null) await t;
             CurrentDate = CurrentDate.AddDays(1);
             t = ListUpdated?.Invoke();
@@ -122,7 +116,7 @@ namespace RemindersADHD.MVVM.ViewModels
         }
         private async Task Unchecked(HabitOnDay? item)
         {
-            if(item is null) return;
+            if (item is null) return;
             await HabitsDataService.RemoveDate(item.Habit.Id, item.Date);
         }
         private async Task Checked(HabitOnDay? item)
@@ -158,7 +152,7 @@ namespace RemindersADHD.MVVM.ViewModels
 
         private IEnumerable<HabitOnDay> CreateHabitsOnDay(DateTime date)
         {
-            if(date>DateTime.Now.Date)
+            if (date > DateTime.Now.Date)
                 return Enumerable.Empty<HabitOnDay>();
             return allHabits.Select(x => x.GetHabitOnDay(date));
         }
@@ -168,7 +162,7 @@ namespace RemindersADHD.MVVM.ViewModels
         }
         private static void ChangeDateInList(IEnumerable<HabitOnDay> habits, DateTime newDate)
         {
-            foreach(var h in habits)
+            foreach (var h in habits)
             {
                 h.Date = newDate;
             }

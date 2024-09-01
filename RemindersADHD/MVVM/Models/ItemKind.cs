@@ -1,26 +1,20 @@
-﻿using CommunityToolkit.Maui.Media;
+﻿using Connect;
 using RemindersADHD.MVVM.Models.Scheduling;
-using RemindersADHD.Services;
 using SQLite;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RemindersADHD.MVVM.Models
 {
-    public class ItemKind : INotifyPropertyChanged, IUniqueId, IParent<ItemKind>, IParent<Tracker>
+    public class ItemKind : INotifyPropertyChanged, IUniqueId
     {
         public ItemKind()
         {
+            _subItemsReadOnly = new(_subItems);
+            OnPropertyChanged(nameof(SubItems));
         }
-        public ItemKind(Tracker tracker)
+        public ItemKind(Tracker tracker) : this()
         {
             Tracker = tracker;
         }
@@ -60,8 +54,11 @@ namespace RemindersADHD.MVVM.Models
 
         #endregion
 
+        private ObservableCollection<ItemKind> _subItems = [];
+        private ReadOnlyObservableCollection<ItemKind> _subItemsReadOnly;
+        private Dictionary<int, ItemKind> _subItemsDictionary = [];
         [Ignore]
-        public ObservableCollection<ItemKind> SubItems { get; set; } = [];
+        public ReadOnlyObservableCollection<ItemKind> SubItems { get => _subItemsReadOnly; }
 
         private bool _subItemsVisible = false;
         public bool SubItemsVisible
@@ -87,34 +84,99 @@ namespace RemindersADHD.MVVM.Models
 
         private static readonly IdEqualityComparer<ItemKind> _comparer = new();
         [Ignore]
-        public IEqualityComparer<IUniqueId> Comparer => _comparer;
+        public static IEqualityComparer<IUniqueId> Comparer => _comparer;
 
-        //private bool _isDone = false;
-        //public bool IsDone
-        //{
-        //    get => _isDone;
-        //    set
-        //    {
-        //        _isDone = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
-
-        public void RemoveSubItemById(int id)
+        public bool RemoveSubItemById(int id)
         {
-            SubItems.Remove(SubItems.First(item => item.Id == id));
+            if (_subItemsDictionary.ContainsKey(id))
+            {
+                _subItems.Remove(_subItemsDictionary[id]);
+                _subItemsDictionary.Remove(id);
+                return true;
+            }
+            return false;
+        }
+
+        public bool RemoveSubItem(ItemKind item)
+        {
+            if (item is null) return false;
+            return RemoveSubItemById(item.Id);
+        }
+
+        public bool AddSubItem(ItemKind? item, int index = -1)
+        {
+            if (item is null)
+                return false;
+            if (_subItemsDictionary.ContainsKey(item.Id))
+            {
+                for (int i = 0; i < _subItems.Count; i++)
+                {
+                    if (_subItems[i].Id == item.Id)
+                    {
+                        _subItems[i] = item;
+                        _subItemsDictionary[item.Id] = item;
+                        if (index >= 0)
+                        {
+                            _subItems.Move(i, index);
+                        }
+                        return true;
+                    }
+                }
+                throw new Exception();
+            }
+            _subItemsDictionary[item.Id] = item;
+            if (index >= 0)
+                _subItems.Insert(index, item);
+            else
+                _subItems.Add(item);
+            return true;
+        }
+
+        public void RefreshSubItems(IList<ItemKind?> items)
+        {
+            if (items is null) return;
+            _subItemsDictionary.Clear();
+            for (int i = 0; i < items.Count; i++)
+            {
+                ItemKind? item = items[i];
+                if (item is null) continue;
+
+                if (i < _subItems.Count)
+                {
+                    _subItems[i] = item;
+                }
+                else
+                {
+                    _subItems.Add(item);
+                }
+                _subItemsDictionary[item.Id] = item;
+            }
+            if (items.Count < _subItems.Count)
+            {
+                int i = _subItems.Count - 1;
+                while (i >= items.Count)
+                {
+                    _subItems.RemoveAt(i);
+                }
+            }
+        }
+
+        public bool HasSubItem(ItemKind? item)
+        {
+            if (item is null) return false;
+            return _subItemsDictionary.ContainsKey(item.Id);
         }
 
         public IList<ICardBindable> GetItemsOnDay(DateTime dateTime)
         {
             List<ICardBindable> res = [];
-            if (!HasSchedule) {
+            if (!HasSchedule)
+            {
                 res.Add(new ItemNoDate(this));
                 return res;
             }
             var l = Schedule.TimesOnDate(dateTime);
-            foreach(var itemTime in l)
+            foreach (var itemTime in l)
             {
                 res.Add(new ItemWithDate(this, itemTime.Date + itemTime.Time));
             }
@@ -130,16 +192,6 @@ namespace RemindersADHD.MVVM.Models
         protected void OnPropertyChanged([CallerMemberName] string name = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        public bool HasChild(ItemKind child)
-        {
-            return SubItems.Contains(child, Comparer);
-        }
-
-        public bool HasChild(Tracker child)
-        {
-            return Tracker.Comparer.Equals(Tracker, child);
         }
     }
 }

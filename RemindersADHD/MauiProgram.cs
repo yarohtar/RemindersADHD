@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using CommunityToolkit.Maui;
-using System.Runtime.Serialization.Formatters;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 
 namespace RemindersADHD
 {
@@ -21,7 +19,7 @@ namespace RemindersADHD
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
             return builder.Build();
         }

@@ -1,33 +1,27 @@
-﻿using RemindersADHD.Services;
+﻿using Connect;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RemindersADHD.MVVM.Models
 {
-    public class Tracker : IUniqueId, IParent<ItemKind>//, IParent<TrackerDateKindPair>
+    public class Tracker : IUniqueId
     {
         private SortedList<DateTime, HashSet<ItemKind>> _dateTracking = [];
-        private HashSet<ItemKind> _noDateTracking = [];
+        private HashSet<ItemKind> _noDateTracking = new(ItemKind.Comparer);
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-        private static readonly IdEqualityComparer<Tracker> _comparer = new();
-        [Ignore]
-        public IEqualityComparer<IUniqueId> Comparer => _comparer;
+        //private static readonly IdEqualityComparer<Tracker> _comparer = new();
+        //[Ignore]
+        //public IEqualityComparer<IUniqueId> Comparer => _comparer;
 
         [Ignore]
         public HashSet<ItemKind> this[DateTime dateTime]
         {
-            get {
+            get
+            {
                 if (!_dateTracking.Keys.Contains(dateTime))
-                    _dateTracking[dateTime] = [];
-                return _dateTracking[dateTime];
+                    _dateTracking[dateTime] = new(ItemKind.Comparer);
+                return _dateTracking.AsReadOnly()[dateTime];
             }
         }
         [Ignore]
@@ -42,9 +36,9 @@ namespace RemindersADHD.MVVM.Models
         public void RemoveItemById(int id)
         {
             NoDateTracking.Remove(NoDateTracking.First(item => item.Id == id));
-            foreach(var date in DatesTracked)
+            foreach (var date in DatesTracked)
             {
-                this[date].Remove(this[date].First(item=>item.Id == id));
+                this[date].Remove(this[date].First(item => item.Id == id));
             }
         }
 
@@ -65,12 +59,12 @@ namespace RemindersADHD.MVVM.Models
         private int FindIndexBefore(DateTime dateTime)
         {
             if (_dateTracking.Count == 0) { return -1; }
-            return FindIndexBefore(dateTime, 0, _dateTracking.Count-1);
+            return FindIndexBefore(dateTime, 0, _dateTracking.Count - 1);
 
         }
         private int FindIndexBefore(DateTime dateTime, int l, int r)
         {
-            if (l>=r)
+            if (l >= r)
             {
                 return r;
             }
@@ -78,30 +72,5 @@ namespace RemindersADHD.MVVM.Models
             if (_dateTracking.Keys[m] < dateTime) { return FindIndexBefore(dateTime, m + 1, r); }
             return FindIndexBefore(dateTime, l, m);
         }
-
-        public bool HasChild(ItemKind child)
-        {
-            return NoDateTracking.Contains(child, child.Comparer);
-        }
-
-        //public bool HasChild(TrackerDateKindPair child)
-        //{
-        //    return this[child.Date].Contains(child.Kind, child.Kind.Comparer);
-        //}
     }
-
-    //public class TrackerDateKindPair : IUniqueId
-    //{
-    //    [PrimaryKey, AutoIncrement]
-    //    public int Id { get; set; }
-
-    //    private static readonly IdEqualityComparer<TrackerDateKindPair> _comparer = new();
-    //    [Ignore]
-    //    public IEqualityComparer<IUniqueId> Comparer => _comparer;
-
-    //    public DateTime Date { get; set; }
-    //    public int KindId { get; set; }
-    //    [Ignore]
-    //    public ItemKind Kind { get; set; }
-    //}
 }

@@ -1,38 +1,28 @@
-﻿using RemindersADHD.MVVM.Models;
-using RemindersADHD.MVVM.Models.Scheduling;
+﻿using Connect;
+using RemindersADHD.MVVM.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Connect;
 
 namespace RemindersADHD.Services
 {
     [Connect(typeof(ItemKind), typeof(Tracker))]
     public partial class ItemTrackerConnection { }
 
-    [Connect(typeof(Tracker),typeof(ItemKind))]
+    [Connect(typeof(Tracker), typeof(ItemKind))]
     public partial class TrackerItemConnection { }
 
-    [Connect(typeof(ItemKind),typeof(ItemKind))]
+    [Connect(typeof(ItemKind), typeof(ItemKind))]
     public partial class ItemSubItemConnection { }
 
     [Connect(typeof(Tracker), typeof(ItemKind))]
-    public partial class TrackerDateConnection {
+    public partial class TrackerDateConnection
+    {
         public DateTime DateTime { get; set; }
         public TrackerDateConnection(Tracker t, DateTime date, ItemKind item) : base(t, item) { DateTime = date; }
     }
 
     public static class ItemDataService
     {
-        [Connect(typeof(Tracker), typeof(ItemKind))]
-        public partial class Tester { }
-
         private static SQLiteAsyncConnection? db;
         [MemberNotNull("db")]
         public static async Task Init()
@@ -51,7 +41,7 @@ namespace RemindersADHD.Services
         public static async Task DeleteEverything()
         {
             await Init();
-            foreach(var tbm in db.TableMappings)
+            foreach (var tbm in db.TableMappings)
                 await db.DeleteAllAsync(tbm);
         }
 
@@ -90,7 +80,7 @@ namespace RemindersADHD.Services
         public static async Task AddSubItem(ItemKind item, ItemKind subitem)
         {
             await Init();
-            if(!_loadedItems.ContainsKey(subitem.Id))
+            if (!_loadedItems.ContainsKey(subitem.Id))
             {
                 await AddItem(subitem);
             }
@@ -141,22 +131,31 @@ namespace RemindersADHD.Services
         #endregion
 
         #region Get
-        private static async Task AddSubitems(ItemKind item)
+        private static async Task RefreshSubItems(ItemKind item)
         {
             var l = await db!.Table<ItemSubItemConnection>().ToListAsync();
-            var s = await db!.Table<ItemTrackerConnection>().ToListAsync();
+            IList<ItemKind?> subitems = [];
             foreach (var connection in l)
             {
-                item.SubItems.Add(await GetItem(connection.ChildId) ?? throw new Exception());
+                ItemKind? subitem = await GetItem(connection.ChildId);
+                if (subitem is null)
+                {
+                    await db!.Table<ItemSubItemConnection>()
+                        .Where(conn => conn.ParentId == item.Id)
+                        .Where(conn => conn.ChildId == connection.ChildId)
+                        .DeleteAsync();
+                    continue;
+                }
+                subitems.Add(subitem);
             }
+            item.RefreshSubItems(subitems);
         }
         public static async Task RefreshItem(ItemKind item)
         {
             await Init();
             if (item is null) return;
             item.Tracker = await GetTrackerForItem(item);
-            item.SubItems.Clear();
-            await AddSubitems(item);
+            await RefreshSubItems(item);
         }
         public static async Task<ItemKind?> GetItem(int itemId)
         {
@@ -168,7 +167,7 @@ namespace RemindersADHD.Services
             if (item is null) return null;
 
             item.Tracker = await GetTrackerForItem(item);
-            await AddSubitems(item);
+            await RefreshSubItems(item);
 
             _loadedItems[itemId] = item;
 
@@ -204,11 +203,11 @@ namespace RemindersADHD.Services
         private static async Task<Tracker> GetTrackerForItem(ItemKind item)
         {
             var conn = await db!.Table<ItemTrackerConnection>().Where(cn => cn.ParentId == item.Id).FirstOrDefaultAsync();
-            if(conn is null)
+            if (conn is null)
             {
                 Tracker tnew = new Tracker();
                 await AddTracker(tnew);
-                await db!.InsertAsync(new ItemTrackerConnection { ParentId=item.Id, ChildId = tnew.Id});
+                await db!.InsertAsync(new ItemTrackerConnection { ParentId = item.Id, ChildId = tnew.Id });
                 return tnew;
             }
             Tracker? t = await GetTracker(conn.ChildId) ?? throw new Exception();
@@ -228,7 +227,7 @@ namespace RemindersADHD.Services
             foreach (var item in items)
             {
                 item.Tracker = await GetTrackerForItem(item);
-                await AddSubitems(item);
+                await RefreshSubItems(item);
             }
             return items;
         }
@@ -238,7 +237,7 @@ namespace RemindersADHD.Services
             await Init();
             var trackers = await db.Table<Tracker>().ToListAsync();
             var res = new List<Tracker>();
-            foreach(var tracker in trackers)
+            foreach (var tracker in trackers)
             {
                 Tracker? t = await GetTracker(tracker.Id);
                 if (t is null)
@@ -280,11 +279,11 @@ namespace RemindersADHD.Services
         private static async Task RemoveTracker(int id)
         {
             await Init();
-            if (await db.Table<ItemTrackerConnection>().Where(conn=> conn.ChildId==id).CountAsync() > 0 
-                || _loadedItems.Where(kvp => kvp.Value.Tracker.Id==id).Any()) 
+            if (await db.Table<ItemTrackerConnection>().Where(conn => conn.ChildId == id).CountAsync() > 0
+                || _loadedItems.Where(kvp => kvp.Value.Tracker.Id == id).Any())
             {
                 throw new Exception($@"Table count is {await db.Table<ItemTrackerConnection>().Where(conn => conn.ChildId == id).CountAsync()}
-                                    loaded items count is {_loadedItems.Where(kvp=>kvp.Value.Tracker.Id==id).Count()}");
+                                    loaded items count is {_loadedItems.Where(kvp => kvp.Value.Tracker.Id == id).Count()}");
             }
             await db.DeleteAsync<Tracker>(id);
             await db.Table<TrackerItemConnection>().Where(conn => conn.ParentId == id).DeleteAsync();
@@ -295,7 +294,7 @@ namespace RemindersADHD.Services
         public static async Task FilterTrackers()
         {
             await Init();
-            foreach(Tracker t in await GetTrackers())
+            foreach (Tracker t in await GetTrackers())
             {
                 if (await db.Table<ItemTrackerConnection>().Where(conn => conn.ChildId == t.Id).CountAsync() == 0)
                     await RemoveTracker(t.Id);

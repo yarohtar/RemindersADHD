@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RemindersADHD.MVVM.Models.Scheduling
+﻿namespace RemindersADHD.MVVM.Models.Scheduling
 {
     public class OneTime : ISchedule
     {
@@ -14,7 +8,7 @@ namespace RemindersADHD.MVVM.Models.Scheduling
         {
             if (Date != date.Date) return [];
             if (HasTime)
-                return [new ItemTime { Date = date, Time =Time }];
+                return [new ItemTime { Date = date, Time = Time }];
             return [new ItemTime { Date = date }];
         }
         public bool Overdue => DateTime.Now > Date + Time;

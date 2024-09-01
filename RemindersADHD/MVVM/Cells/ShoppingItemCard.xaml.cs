@@ -6,9 +6,9 @@ namespace RemindersADHD.MVVM.Cells;
 
 public partial class ShoppingItemCard : ContentView
 {
-	public ShoppingItemCard()
-	{
-		InitializeComponent();
+    public ShoppingItemCard()
+    {
+        InitializeComponent();
     }
 
     public static readonly BindableProperty ParentViewModelProperty =
@@ -35,13 +35,14 @@ public partial class ShoppingItemCard : ContentView
         if (e.PropertyName == nameof(item.HasNote))
         {
             if (item.HasNote)
-                await MoreButton.RotateTo(180,150);
-            else {
+                await MoreButton.RotateTo(180, 150);
+            else
+            {
                 if (MoreButton.Rotation < 180)
                     await MoreButton.RotateTo(0, 200);
                 else
                 {
-                    await MoreButton.RotateTo(360, 200); 
+                    await MoreButton.RotateTo(360, 200);
                     MoreButton.Rotation = 0;
                 }
             }

@@ -1,12 +1,7 @@
 ﻿using RemindersADHD.MVVM.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RemindersADHD.Services
 {
@@ -39,7 +34,7 @@ namespace RemindersADHD.Services
             await Init();
             await db.InsertAsync(item);
             await RemoveDates(item);
-            await db.InsertAllAsync(item.datesCompleted.Select(d=>new DateDone { Date=d, ExternalId=item.Id}));
+            await db.InsertAllAsync(item.datesCompleted.Select(d => new DateDone { Date = d, ExternalId = item.Id }));
         }
         public static async Task RemoveItem(int id)
         {
@@ -65,7 +60,7 @@ namespace RemindersADHD.Services
         {
             if (habit is null) return;
             await Init();
-            var l = (await DatesQuery(habit).ToListAsync()).Select(d=>d.Date);
+            var l = (await DatesQuery(habit).ToListAsync()).Select(d => d.Date);
             habit.datesCompleted = new HashSet<DateTime>(l);
         }
         private static async Task<IEnumerable<Habit>> GetItems(AsyncTableQuery<Habit> query)
@@ -122,7 +117,7 @@ namespace RemindersADHD.Services
         {
             if (habit is null) return;
             await Init();
-            var oldDates = (await DatesQuery(habit).ToListAsync()).Select(d=>d.Date);
+            var oldDates = (await DatesQuery(habit).ToListAsync()).Select(d => d.Date);
 
             var toRemove = oldDates.Except(habit.datesCompleted);
             var toAdd = habit.datesCompleted.Except(oldDates);

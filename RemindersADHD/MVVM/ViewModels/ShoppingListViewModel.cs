@@ -1,15 +1,8 @@
 ﻿using MvvmHelpers;
 using RemindersADHD.MVVM.Models;
 using RemindersADHD.Services;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace RemindersADHD.MVVM.ViewModels
@@ -59,7 +52,8 @@ namespace RemindersADHD.MVVM.ViewModels
             }
         }
 
-        public ShoppingListViewModel() { 
+        public ShoppingListViewModel()
+        {
             ShoppingItems = new ObservableRangeCollection<ShoppingItem>();
             OldItems = new ObservableRangeCollection<ShoppingItem>();
         }
@@ -94,7 +88,7 @@ namespace RemindersADHD.MVVM.ViewModels
                 NewItemName = "";
                 return;
             }
-            var s = OldItems.FirstOrDefault(x=>x.Name == NewItemName);
+            var s = OldItems.FirstOrDefault(x => x.Name == NewItemName);
             if (s != null)
             {
                 NewItemName = "";
@@ -134,16 +128,16 @@ namespace RemindersADHD.MVVM.ViewModels
         {
             ShoppingItems.Remove(s);
             s.IsOnList = false;
-            await AddBinary(OldItems, s, 0, OldItems.Count-1);
+            await AddBinary(OldItems, s, 0, OldItems.Count - 1);
             await ShoppingDataService.UpdateItem(s);
         }
 
         private async Task AddBinary(IList<ShoppingItem> list, ShoppingItem item, int l, int r) //probably bad lmao
         {
             if (l >= r) { list.Insert(l, item); return; }
-            int m=(l+r)/2;
-            if (ShoppingItem.Compare(item, list[m])>=0) { await AddBinary(list, item, l, m); }
-            else { await AddBinary(list, item, m+1, r); }
+            int m = (l + r) / 2;
+            if (ShoppingItem.Compare(item, list[m]) >= 0) { await AddBinary(list, item, l, m); }
+            else { await AddBinary(list, item, m + 1, r); }
         }
 
 

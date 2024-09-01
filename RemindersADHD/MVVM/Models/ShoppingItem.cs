@@ -1,11 +1,6 @@
 ﻿using SQLite;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RemindersADHD.MVVM.Models
 {
@@ -17,7 +12,7 @@ namespace RemindersADHD.MVVM.Models
         public int Id { get; set; }
 
         public string Name { get; set; } = "";
-        public bool IsOnList {get; set; }
+        public bool IsOnList { get; set; }
         public DateTime LastBought { get; set; }
         //public List<DateTime> DatesBought { get; set; }
         public int TimesBought { get; set; }
@@ -26,7 +21,8 @@ namespace RemindersADHD.MVVM.Models
         public string Note { get; set; } = "";
 
         string buyAgainDaysString = "";
-        public string BuyAgainDaysString { 
+        public string BuyAgainDaysString
+        {
             get { return buyAgainDaysString; }
             set
             {
@@ -41,7 +37,7 @@ namespace RemindersADHD.MVVM.Models
         }
         public int BuyAgainDays
         {
-            get => BuyAgainDaysString.Length>0 ? int.Parse(BuyAgainDaysString) : 0;
+            get => BuyAgainDaysString.Length > 0 ? int.Parse(BuyAgainDaysString) : 0;
         }
 
         public bool BuyOverdue { get => BuyAgainDays > 0 && LastBought.AddDays(BuyAgainDays).CompareTo(DateTime.Now) < 0; }
@@ -52,10 +48,10 @@ namespace RemindersADHD.MVVM.Models
         {
             get
             {
-                if (TimesBought==0) return "Never bought";
+                if (TimesBought == 0) return "Never bought";
                 if (LastBought.Date == DateTime.Now.Date) return "Last bought today";
                 if (LastBought.Date == DateTime.Now.AddDays(-1).Date) return "Last bought yesterday";
-                for(int i=2; i<=9; i++)
+                for (int i = 2; i <= 9; i++)
                 {
                     if (LastBought.Date == DateTime.Now.AddDays(-i).Date) return $"Last bought {i} days ago";
                 }
@@ -77,7 +73,7 @@ namespace RemindersADHD.MVVM.Models
             TimesBought = 0;
             NeedToBuy = needToBuy;
             //DatesBought = new List<DateTime>();
-            HasNote= false;
+            HasNote = false;
             Note = "";
             BuyAgainDaysString = "";
         }
@@ -87,8 +83,8 @@ namespace RemindersADHD.MVVM.Models
             DateTime now = DateTime.Now;
             LastBought = now;
             //DatesBought.Add(now);
-            TimesBought+=amountBought;
-            NeedToBuy-=amountBought;
+            TimesBought += amountBought;
+            NeedToBuy -= amountBought;
             if (NeedToBuy < 0)
             {
                 NeedToBuy = 0;

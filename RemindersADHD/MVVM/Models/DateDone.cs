@@ -1,11 +1,4 @@
-﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RemindersADHD.MVVM.Models
+﻿namespace RemindersADHD.MVVM.Models
 {
     public class DateDone
     {

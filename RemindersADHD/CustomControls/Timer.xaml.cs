@@ -1,11 +1,11 @@
-using System.Linq.Expressions;
 using System.Windows.Input;
 
 namespace RemindersADHD.CustomControls;
 
 public partial class Timer : ContentView
 {
-    public enum TimerMode { 
+    public enum TimerMode
+    {
         /// <summary>
         /// Timer runs forwards
         /// </summary>
@@ -32,11 +32,11 @@ public partial class Timer : ContentView
         BackwardUntil
     }
 
-	public Timer()
-	{
-		InitializeComponent();
-	}
-    
+    public Timer()
+    {
+        InitializeComponent();
+    }
+
     private DateTime _startTime = DateTime.Now;
     private long _ticksStarted = 0;
     private bool _internalMillisecondsChange = false;
@@ -130,19 +130,19 @@ public partial class Timer : ContentView
     {
         if (_eventRaised)
             return;
-        switch(Mode)
+        switch (Mode)
         {
             case TimerMode.Basic:
             case TimerMode.BasicBackward:
                 return;
             case TimerMode.ForwardTo:
-                if(MillisecondsOnClock >= MillisecondsToHit)
+                if (MillisecondsOnClock >= MillisecondsToHit)
                 {
                     CallTimeHit();
                 }
                 break;
             case TimerMode.ForwardUntil:
-                if(MillisecondsOnClock >= MillisecondsToHit)
+                if (MillisecondsOnClock >= MillisecondsToHit)
                 {
                     //pause it
                     IsRunning = false;
@@ -199,7 +199,7 @@ public partial class Timer : ContentView
     }
     private static void OnModeChanged(BindableObject bindable, object oldvalue, object newvalue)
     {
-        if(bindable is not Timer timer) return;
+        if (bindable is not Timer timer) return;
         timer._eventRaised = false;
     }
     private static void OnMillisecondsToHitChanged(BindableObject bindable, object oldvalue, object newvalue)
@@ -232,11 +232,11 @@ public partial class Timer : ContentView
     }
 
     public static readonly BindableProperty FontSizeProperty =
-        BindableProperty.Create(nameof(FontSize), typeof(short), typeof(Timer), (short)70, 
+        BindableProperty.Create(nameof(FontSize), typeof(short), typeof(Timer), (short)70,
             BindingMode.OneWay);
     public short FontSize
     {
-        get=> (short)GetValue(FontSizeProperty);
+        get => (short)GetValue(FontSizeProperty);
         set => SetValue(FontSizeProperty, value);
     }
 
@@ -254,9 +254,10 @@ public partial class Timer : ContentView
         BindableProperty.Create(nameof(Mode), typeof(TimerMode), typeof(Timer),
             defaultValue: TimerMode.Basic,
             propertyChanged: OnModeChanged);
-    public TimerMode Mode { 
+    public TimerMode Mode
+    {
         get => (TimerMode)GetValue(ModeProperty);
-        set => SetValue(ModeProperty, value); 
+        set => SetValue(ModeProperty, value);
     }
 
     public static readonly BindableProperty TimeHitCommandProperty =
@@ -273,7 +274,7 @@ public partial class Timer : ContentView
             defaultValue: null);
     public object TimeHitCommandParameter
     {
-        get=> GetValue(TimeHitCommandParameterProperty);
+        get => GetValue(TimeHitCommandParameterProperty);
         set => SetValue(TimeHitCommandParameterProperty, value);
     }
     #endregion

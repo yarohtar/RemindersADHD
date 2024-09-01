@@ -1,13 +1,7 @@
 ﻿using RemindersADHD.MVVM.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RemindersADHD.Services
 {
@@ -41,7 +35,7 @@ namespace RemindersADHD.Services
             return items;
         }
 
-        public static async Task<IEnumerable<ShoppingItem>> GetItemsWhere(Expression <Func<ShoppingItem, bool>> pred)
+        public static async Task<IEnumerable<ShoppingItem>> GetItemsWhere(Expression<Func<ShoppingItem, bool>> pred)
         {
             await Init();
             var items = db.Table<ShoppingItem>();

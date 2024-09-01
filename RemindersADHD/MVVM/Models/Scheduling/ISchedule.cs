@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RemindersADHD.MVVM.Models.Scheduling
 {
     public interface ISchedule
     {
-        public List<ItemTime> TimesOnDate (DateTime date);
+        public List<ItemTime> TimesOnDate(DateTime date);
         public bool Overdue { get; }
     }
 
@@ -27,7 +22,7 @@ namespace RemindersADHD.MVVM.Models.Scheduling
         public bool HasTimeOfDay { get => _hasTimeOfDay; set { _hasTimeOfDay = value; OnPropertyChanged(); } }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName]string name=null)
+        private void OnPropertyChanged([CallerMemberName] string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:RemindersADHD.MVVM.ViewModels"
              x:Class="RemindersADHD.MVVM.Views.HabitEditView"
-             Title="Edit habit">
+             Title="Edit habit"
+             x:DataType="vm:HabitEditViewModel">
     <Grid RowDefinitions="*, Auto">
         <VerticalStackLayout>
             <Entry Placeholder="Name" Text="{Binding Name}"/>

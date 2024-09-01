@@ -5,19 +5,25 @@
        xmlns:local="clr-namespace:RemindersADHD"
        xmlns:views="clr-namespace:RemindersADHD.MVVM.Views"
        Title="RemindersADHD"
-       Style="{StaticResource Shell}"
-       Shell.FlyoutBehavior="Flyout">
+       Shell.FlyoutBehavior="Flyout"
+       Style="{StaticResource Shell}">
 
-    <ShellContent Title="Pomodoro"
-                  x:Name="PomodoroFlyoutItem"
-                  Route="pomodoro"/>
-    <ShellContent Title="Test view"
-                  x:Name="TestFlyoutItem"
-                  Route="testingshit"/>
-    <ShellContent Title="Habits"
-                  x:Name="HabitsFlyoutItem"
+    <ShellContent x:Name="ListFlyoutItem"
+                  Title="List View"
+                  Route="listview"/>
+    <ShellContent x:Name="TestFlyoutItem"
+                  Title="Test view"
+                  Route="testingshit" />
+    <ShellContent x:Name="RoutinesFlyoutItem"
+                  Title="Routines"
+                  Route="routines" />
+    <ShellContent x:Name="PomodoroFlyoutItem"
+                  Title="Pomodoro"
+                  Route="pomodoro" />
+    <ShellContent x:Name="HabitsFlyoutItem"
+                  Title="Habits"
                   Route="habits" />
-    <ShellContent Title="Shopping List"
-                  x:Name="ShoppingListFlyoutItem"
+    <ShellContent x:Name="ShoppingListFlyoutItem"
+                  Title="Shopping List"
                   Route="shoppinglist" />
 </Shell>

@@ -7,7 +7,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <Style TargetType="Label">
-                <Setter Property="FontSize" Value="{Binding FontSize, Source={x:Reference self}}"/>
+                <Setter Property="FontSize" Value="{Binding FontSize, Source={x:Reference self}}" />
             </Style>
         </ResourceDictionary>
     </ContentView.Resources>
@@ -15,7 +15,8 @@
         <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
     </ContentView.GestureRecognizers>-->
     <HorizontalStackLayout>
-        <Label Text="-" IsVisible="{Binding HasMinus, Source={x:Reference self}}"/>
+        <Label IsVisible="{Binding HasMinus, Source={x:Reference self}}"
+               Text="-" />
         <Label Text="{Binding Minutes, Source={x:Reference self}}" />
         <Label Text=":" />
         <Label Text="{Binding Seconds, Source={x:Reference self}}" />

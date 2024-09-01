@@ -52,13 +52,56 @@
 
     <!--#region Frames-->
 
-    <Style x:Key="Base_FrameEntry"
+    <Style x:Key="BaseFrame"
            TargetType="Frame">
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Padding" Value="10, 0" />
-        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource LightEntryBorderColor}, Dark={StaticResource DarkEntryBorderColor}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightEntryBackgroundColor}, Dark={StaticResource DarkEntryBackgroundColor}}" />
     </Style>
+
+    <Style x:Key="TransparentFrame"
+           BasedOn="{StaticResource BaseFrame}"
+           TargetType="Frame">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup Name="CommonStates">
+                    <VisualState Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightEntryBackgroundColor}, Dark={StaticResource DarkEntryBackgroundColor}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Base_FrameEntry"
+           BasedOn="{StaticResource BaseFrame}"
+           TargetType="Frame">
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource LightEntryBorderColor}, Dark={StaticResource DarkEntryBorderColor}}" />
+        <!--<Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightEntryBackgroundColor}, Dark={StaticResource DarkEntryBackgroundColor}}" />-->
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup Name="CommonStates">
+                    <VisualState Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightEntryBackgroundColor}, Dark={StaticResource DarkEntryBackgroundColor}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="LightGrey" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
 
     <!--#endregion-->
 
@@ -66,6 +109,7 @@
 
     <Style x:Key="Base_Entry"
            TargetType="Entry">
+        <Setter Property="FontSize" Value="{StaticResource CaptionFontSize0}"/>
         <Setter Property="FontFamily" Value="OpenSansRegular" />
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource LightPlaceholderTextColor}, Dark={StaticResource DarkPlaceholderTextColor}}" />
@@ -129,30 +173,28 @@
     </Style>
 
     <Style x:Key="Small_Button"
-           TargetType="Button"
            BasedOn="{StaticResource Base_Button}"
-           >
-        <Setter Property="VerticalOptions" Value="Center"/>
-        <Setter Property="Padding" Value="8"/>
-        <Setter Property="FontSize" Value="{StaticResource SmallButtonFontSize}"/>
+           TargetType="Button">
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="Padding" Value="8" />
+        <Setter Property="FontSize" Value="{StaticResource SmallButtonFontSize}" />
     </Style>
 
     <Style x:Key="Arrow_More_Button"
-           TargetType="Button"
            BasedOn="{StaticResource Small_Button}"
-           >
-        <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="FontFamily" Value="ArrowIcons"/>
-        <Setter Property="Text" Value="&#xE808;"/>
-        <Setter Property="CornerRadius" Value="20"/>
-        <Setter Property="BorderColor" Value="Transparent"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
+           TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="FontFamily" Value="ArrowIcons" />
+        <Setter Property="Text" Value="&#xE808;" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="BorderColor" Value="Transparent" />
+        <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="Black" />
+                            <Setter Property="BackgroundColor" Value="Transparent" />
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryTextColor}, Dark={StaticResource DarkPrimaryTextColor}}" />
                         </VisualState.Setters>
                     </VisualState>

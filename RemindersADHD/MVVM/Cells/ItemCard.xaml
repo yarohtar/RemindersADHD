@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="RemindersADHD.MVVM.Cells.ItemCard"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cells="clr-namespace:RemindersADHD.MVVM.Cells"
+             xmlns:models="clr-namespace:RemindersADHD.MVVM.Models"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Name="self"
+             x:DataType="cells:ItemCard">
+
+    <VerticalStackLayout>
+        <Frame Style="{StaticResource TransparentFrame}">
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Source={x:Reference self}, Path=TapCommand}"
+                                      CommandParameter="{Binding Source={x:Reference self}, Path=TapCommandParameter}" />
+            </Frame.GestureRecognizers>
+
+            <Grid ColumnDefinitions="Auto,*,*,Auto">
+                <CheckBox IsChecked="{Binding Source={x:Reference self}, Path=Item.Done}"
+                          IsVisible="{Binding Source={x:Reference self}, Path=Item.Kind.IsDoable}"
+                          VerticalOptions="Center">
+                    <CheckBox.Behaviors>
+                        <toolkit:EventToCommandBehavior Command="{Binding Source={x:Reference self}, Path=CheckChangedCommand}"
+                                                        CommandParameter="{Binding Source={x:Reference self}, Path=CheckChangedCommandParameter}"
+                                                        EventName="CheckedChanged" />
+                    </CheckBox.Behaviors>
+                </CheckBox>
+                <Label Grid.Column="1"
+                       Style="{StaticResource ItemName1}"
+                       Text="{Binding Item.Kind.Title, Source={x:Reference self}}"
+                       VerticalOptions="Center" />
+                <!--<Label Grid.Column="2"
+                       FontSize="10"
+                       HorizontalOptions="EndAndExpand"
+                       Style="{StaticResource ItemName1}"
+                       Text="{Binding ItemDisplay.Kind.Tracker.LastDone, Source={x:Reference self}}"
+                       VerticalOptions="Center" />-->
+                <Button x:Name="MoreButton"
+                        Grid.Column="3"
+                        BackgroundColor="Transparent"
+                        Command="{Binding Source={x:Reference self}, Path=SwitchMoreCommand}"
+                        CommandParameter="{Binding .}"
+                        Style="{StaticResource Arrow_More_Button}" />
+            </Grid>
+        </Frame>
+
+
+        <VerticalStackLayout x:Name="childitems"
+                             Grid.Column="1"
+                             BindableLayout.ItemsSource="{Binding Source={x:Reference self}, Path=Item.SubItems}"
+                             IsVisible="{Binding Source={x:Reference self}, Path=Item.Kind.SubItemsVisible}"
+                             VerticalOptions="Start">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="15,*">
+                        <Line HorizontalOptions="Start"
+                              Stroke="{AppThemeBinding Dark={StaticResource DarkPrimaryTextColor},
+                                                       Light={StaticResource LightPrimaryTextColor}}"
+                              StrokeThickness="2"
+                              VerticalOptions="Start"
+                              X1="3"
+                              X2="3"
+                              Y2="{Binding Source={x:Reference card}, Path=Height}" />
+                        <cells:ItemCard x:Name="card"
+                                        Grid.Column="1"
+                                        CheckChangedCommand="{Binding Source={x:Reference self}, Path=CheckChangedCommand}"
+                                        CheckChangedCommandParameter="{Binding Source={x:Reference self}, Path=CheckChangedCommandParameter}"
+                                        Item="{Binding .}" />
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentView>

@@ -85,7 +85,6 @@ namespace RemindersADHD.MVVM.ViewModels
             Sessions.Add(new Session { Mode = Session.SessionMode.Study });
             Sessions.Add(new Session { Mode = Session.SessionMode.Break });
             Sessions.Add(new Session { Mode = Session.SessionMode.Study });
-            //Sessions.Add(new Session { Mode = Session.SessionMode.Break });
             Sessions.Add(new Session { Mode = Session.SessionMode.LongBreak });
             if(NumberOfSessions > 0) {
                 CurrentSessionIndex = 0;
